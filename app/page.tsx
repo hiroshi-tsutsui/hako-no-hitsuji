@@ -63,9 +63,13 @@ export default function Home() {
         <div className="bg-white p-12 rounded-3xl shadow-xl max-w-lg text-center">
           <h2 className="text-3xl font-bold mb-4">{result.title}</h2>
           <p className="text-xl mb-8 leading-relaxed">{result.desc}</p>
-          <div className="p-4 bg-black text-white rounded cursor-pointer hover:opacity-80">
+          <a 
+            href={`https://twitter.com/intent/tweet?text=I%20am%20"${result.title}".%20What%20is%20in%20your%20box?%20Find%20out%20at%20HakoNoHitsuji%20%23箱の中の羊`}
+            target="_blank"
+            className="block w-full p-4 bg-black text-white rounded cursor-pointer hover:opacity-80 mt-4"
+          >
             Share on X (Twitter) #箱の中の羊
-          </div>
+          </a>
           <button onClick={() => window.location.reload()} className="mt-4 text-gray-500 underline">Try Again</button>
         </div>
       </main>
