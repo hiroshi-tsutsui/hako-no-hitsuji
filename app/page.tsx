@@ -1,34 +1,101 @@
-import React from 'react';
+'use client';
+import React, { useState } from 'react';
+
+const RESULTS = [
+  {
+    title: "The Golden Fleece",
+    desc: "You crave success and wealth. Inside your box, the sheep is shining. You are ambitious but lonely.",
+    color: "bg-yellow-100 text-yellow-800"
+  },
+  {
+    title: "The Sleeping Lamb",
+    desc: "You are tired. So tired. You just want peace. Your sheep is unconscious. Go to sleep.",
+    color: "bg-blue-100 text-blue-800"
+  },
+  {
+    title: "The Wolf in Sheep's Clothing",
+    desc: "You are dangerous. You hide your true self. The sheep in your box has sharp teeth.",
+    color: "bg-red-100 text-red-800"
+  },
+  {
+    title: "The Invisible Sheep",
+    desc: "You feel ignored. The box is empty. Or is it? You are a philosopher at heart.",
+    color: "bg-gray-100 text-gray-800"
+  }
+];
 
 export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-slate-900 text-white">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <h1 className="text-4xl font-bold text-red-500">Kanji Combat 漢字バトル</h1>
-      </div>
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState<number[]>([]);
+  const [result, setResult] = useState<any>(null);
 
-      <div className="relative flex place-items-center">
-        <div className="text-center">
-          <p className="mb-4 text-xl">Defeat monsters by writing the correct Kanji!</p>
-          <div className="p-8 border-4 border-red-600 rounded-lg bg-slate-800">
-            <p className="text-6xl mb-4">火</p>
-            <input type="text" placeholder="Reading?" className="text-black p-2 rounded" />
-            <button className="ml-2 bg-red-600 px-4 py-2 rounded font-bold hover:bg-red-700">ATTACK</button>
+  const QUESTIONS = [
+    {
+      q: "There is a box in front of you. What is it made of?",
+      options: ["Cardboard", "Gold", "Glass", "Iron"]
+    },
+    {
+      q: "You hear a sound from inside. What does it sound like?",
+      options: ["'Baaa'", "Silence", "Scratching", "Singing"]
+    },
+    {
+      q: "You open the box. How big is the sheep?",
+      options: ["Tiny", "Huge", "Normal", "It's not a sheep"]
+    }
+  ];
+
+  const handleAnswer = (idx: number) => {
+    const newAnswers = [...answers, idx];
+    setAnswers(newAnswers);
+    if (step + 1 < QUESTIONS.length) {
+      setStep(step + 1);
+    } else {
+      // Fake calculation algorithm
+      const sum = newAnswers.reduce((a, b) => a + b, 0);
+      setResult(RESULTS[sum % RESULTS.length]);
+    }
+  };
+
+  if (result) {
+    return (
+      <main className={`flex min-h-screen flex-col items-center justify-center p-8 ${result.color}`}>
+        <h1 className="text-4xl font-bold mb-8">Your Sheep Diagnosis</h1>
+        <div className="bg-white p-12 rounded-3xl shadow-xl max-w-lg text-center">
+          <h2 className="text-3xl font-bold mb-4">{result.title}</h2>
+          <p className="text-xl mb-8 leading-relaxed">{result.desc}</p>
+          <div className="p-4 bg-black text-white rounded cursor-pointer hover:opacity-80">
+            Share on X (Twitter) #箱の中の羊
+          </div>
+          <button onClick={() => window.location.reload()} className="mt-4 text-gray-500 underline">Try Again</button>
+        </div>
+      </main>
+    );
+  }
+
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-center bg-stone-200 p-6">
+      <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
+        <h1 className="text-center font-serif text-2xl mb-8 font-bold text-stone-700">箱の中の羊 (Sheep in the Box)</h1>
+        
+        <div className="mb-8">
+          <p className="text-lg font-medium mb-6">{QUESTIONS[step].q}</p>
+          <div className="space-y-3">
+            {QUESTIONS[step].options.map((opt, i) => (
+              <button 
+                key={i}
+                onClick={() => handleAnswer(i)}
+                className="w-full p-4 border rounded-xl hover:bg-stone-100 transition text-left"
+              >
+                {opt}
+              </button>
+            ))}
           </div>
         </div>
-      </div>
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <div className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30">
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Level 1{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Start your journey. Basic N5 Kanji.
-          </p>
+        <div className="flex justify-center gap-2">
+          {[0, 1, 2].map(i => (
+             <div key={i} className={`w-3 h-3 rounded-full ${i === step ? 'bg-stone-800' : 'bg-stone-300'}`}></div>
+          ))}
         </div>
       </div>
     </main>
